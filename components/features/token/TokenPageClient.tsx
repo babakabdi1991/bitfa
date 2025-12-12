@@ -1,4 +1,3 @@
-// components/features/token/TokenPageClient.tsx
 "use client";
 
 import React, { Fragment, useEffect } from "react";
