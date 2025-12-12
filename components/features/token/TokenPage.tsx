@@ -17,8 +17,8 @@ import dayjs from "dayjs";
 
 interface Props {
   params: IParam;
-  searchParams: searchParams;
 }
+// searchParams: searchParams;
 
 type IParam = {
   params: [string, string];

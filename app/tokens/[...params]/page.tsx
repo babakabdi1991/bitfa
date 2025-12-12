@@ -368,7 +368,7 @@ export default async function Token({ params }: Props) {
       />
 
       {/* Client-side interactive components */}
-      <TokenPage params={params} token={searchedToken!} />
+      <TokenPage params={params} />
 
       {tokenDescription?.data?.data && (
         <>
