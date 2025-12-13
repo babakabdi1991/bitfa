@@ -12,6 +12,7 @@ import {
 import HowToUse from "@/components/features/followed-wallets/HowToUse";
 import { TOKEN_PAGE_PARAMS } from "@/utils/pageParams";
 import { minifyContract } from "@/utils/truncate";
+import { Suspense } from "react";
 
 interface Props {
   params: IParam;
@@ -217,120 +218,133 @@ function TokenSEOContent({
   const blockchain = token?.id?.split("_")[0] || "unknown blockchain";
 
   return (
-    <div className="hidden-seo-content" style={{ position: 'absolute', left: '-9999px' }}>
+    <article itemScope itemType="https://schema.org/FinancialProduct" className="prose prose-sm max-w-none my-6">
       {/* Main token information for SEO */}
-      <article itemScope itemType="https://schema.org/FinancialProduct">
-        <h2 itemProp="name">{shortTokenName} Token Overview</h2>
-        <p itemProp="description">
-          {shortTokenName} is a cryptocurrency token trading on the {blockchain} blockchain 
-          via the {dexPlatform} decentralized exchange. Current price is ${tokenPrice} USD 
-          with a 24-hour price change of {formattedPriceChange}. The token has a liquidity 
-          pool of ${liquidity} USD.
+      <h2 itemProp="name" className="text-xl font-semibold mb-4">{shortTokenName} Token Overview</h2>
+      <p itemProp="description" className="mb-4">
+        {shortTokenName} is a cryptocurrency token trading on the {blockchain} blockchain 
+        via the {dexPlatform} decentralized exchange. Current price is ${tokenPrice} USD 
+        with a 24-hour price change of {formattedPriceChange}. The token has a liquidity 
+        pool of ${liquidity} USD.
+      </p>
+      
+      <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
+        <meta itemProp="price" content={tokenPrice} />
+        <meta itemProp="priceCurrency" content="USD" />
+      </div>
+
+      {/* Token metrics */}
+      <section className="my-6">
+        <h3 className="text-lg font-semibold mb-3">Token Metrics and Statistics</h3>
+        <dl className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <dt className="font-medium">Current Price</dt>
+            <dd className="text-gray-600">${tokenPrice} USD</dd>
+          </div>
+          
+          <div>
+            <dt className="font-medium">24-Hour Price Change</dt>
+            <dd className="text-gray-600">{formattedPriceChange}</dd>
+          </div>
+          
+          <div>
+            <dt className="font-medium">Liquidity</dt>
+            <dd className="text-gray-600">${liquidity} USD</dd>
+          </div>
+          
+          <div>
+            <dt className="font-medium">Blockchain Network</dt>
+            <dd className="text-gray-600">{blockchain}</dd>
+          </div>
+          
+          <div>
+            <dt className="font-medium">Trading Platform</dt>
+            <dd className="text-gray-600">{dexPlatform}</dd>
+          </div>
+          
+          <div>
+            <dt className="font-medium">Contract Address</dt>
+            <dd className="text-gray-600 font-mono text-sm">{params[1]}</dd>
+          </div>
+        </dl>
+      </section>
+
+      {/* Token description */}
+      {tokenDescription?.data?.data?.content && (
+        <section className="my-6">
+          <h3 className="text-lg font-semibold mb-3">About {shortTokenName}</h3>
+          <div 
+            className="prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ 
+              __html: tokenDescription.data.data.content 
+            }} 
+          />
+        </section>
+      )}
+
+      {/* Trading information */}
+      <section className="my-6">
+        <h3 className="text-lg font-semibold mb-3">How to Trade {shortTokenName}</h3>
+        <p className="mb-3">
+          You can trade {shortTokenName} on the {dexPlatform} decentralized exchange 
+          platform. The token operates on the {blockchain} network, providing fast 
+          and secure transactions. Trading is available 24/7 with real-time price 
+          updates and liquidity information.
         </p>
         
-        <div itemProp="offers" itemScope itemType="https://schema.org/Offer">
-          <meta itemProp="price" content={tokenPrice} />
-          <meta itemProp="priceCurrency" content="USD" />
-        </div>
+        <h4 className="text-base font-semibold mb-2">Trading Features</h4>
+        <ul className="list-disc list-inside space-y-1 mb-4">
+          <li>Real-time price charts and technical analysis</li>
+          <li>24-hour trading volume tracking</li>
+          <li>Liquidity pool information</li>
+          <li>Token holder statistics and distribution</li>
+          <li>Security audit and safety scores</li>
+          <li>Market depth and order book data</li>
+        </ul>
+      </section>
 
-        {/* Token metrics */}
-        <section>
-          <h3>Token Metrics and Statistics</h3>
-          <dl>
-            <dt>Current Price</dt>
-            <dd>${tokenPrice} USD</dd>
-            
-            <dt>24-Hour Price Change</dt>
-            <dd>{formattedPriceChange}</dd>
-            
-            <dt>Liquidity</dt>
-            <dd>${liquidity} USD</dd>
-            
-            <dt>Blockchain Network</dt>
-            <dd>{blockchain}</dd>
-            
-            <dt>Trading Platform</dt>
-            <dd>{dexPlatform}</dd>
-            
-            <dt>Contract Address</dt>
-            <dd>{params[1]}</dd>
-          </dl>
-        </section>
+      {/* Market analysis */}
+      <section className="my-6">
+        <h3 className="text-lg font-semibold mb-3">{shortTokenName} Market Analysis</h3>
+        <p className="mb-3">
+          The {shortTokenName} token has shown a 24-hour price movement of {formattedPriceChange}. 
+          This price action reflects current market sentiment and trading activity on the 
+          {blockchain} blockchain. Traders can access comprehensive market data including 
+          historical price charts, volume analysis, and liquidity metrics.
+        </p>
+        
+        <h4 className="text-base font-semibold mb-2">Key Market Indicators</h4>
+        <ul className="list-disc list-inside space-y-1 mb-4">
+          <li>Price volatility analysis</li>
+          <li>Trading volume trends</li>
+          <li>Liquidity depth assessment</li>
+          <li>Holder concentration metrics</li>
+          <li>Smart contract security verification</li>
+        </ul>
+      </section>
 
-        {/* Token description */}
-        {tokenDescription?.data?.data?.content && (
-          <section>
-            <h3>About {shortTokenName}</h3>
-            <div dangerouslySetInnerHTML={{ 
-              __html: tokenDescription.data.data.content 
-            }} />
-          </section>
-        )}
+      {/* Security information */}
+      <section className="my-6">
+        <h3 className="text-lg font-semibold mb-3">Security and Safety</h3>
+        <p>
+          {shortTokenName} operates on the {blockchain} blockchain with transparent 
+          smart contract code. All transactions are recorded on-chain and can be verified 
+          through blockchain explorers. The platform provides security scores and audit 
+          information to help traders make informed decisions.
+        </p>
+      </section>
 
-        {/* Trading information */}
-        <section>
-          <h3>How to Trade {shortTokenName}</h3>
-          <p>
-            You can trade {shortTokenName} on the {dexPlatform} decentralized exchange 
-            platform. The token operates on the {blockchain} network, providing fast 
-            and secure transactions. Trading is available 24/7 with real-time price 
-            updates and liquidity information.
-          </p>
-          
-          <h4>Trading Features</h4>
-          <ul>
-            <li>Real-time price charts and technical analysis</li>
-            <li>24-hour trading volume tracking</li>
-            <li>Liquidity pool information</li>
-            <li>Token holder statistics and distribution</li>
-            <li>Security audit and safety scores</li>
-            <li>Market depth and order book data</li>
-          </ul>
-        </section>
-
-        {/* Market analysis */}
-        <section>
-          <h3>{shortTokenName} Market Analysis</h3>
-          <p>
-            The {shortTokenName} token has shown a 24-hour price movement of {formattedPriceChange}. 
-            This price action reflects current market sentiment and trading activity on the 
-            {blockchain} blockchain. Traders can access comprehensive market data including 
-            historical price charts, volume analysis, and liquidity metrics.
-          </p>
-          
-          <h4>Key Market Indicators</h4>
-          <ul>
-            <li>Price volatility analysis</li>
-            <li>Trading volume trends</li>
-            <li>Liquidity depth assessment</li>
-            <li>Holder concentration metrics</li>
-            <li>Smart contract security verification</li>
-          </ul>
-        </section>
-
-        {/* Security information */}
-        <section>
-          <h3>Security and Safety</h3>
-          <p>
-            {shortTokenName} operates on the {blockchain} blockchain with transparent 
-            smart contract code. All transactions are recorded on-chain and can be verified 
-            through blockchain explorers. The platform provides security scores and audit 
-            information to help traders make informed decisions.
-          </p>
-        </section>
-
-        {/* Community and ecosystem */}
-        <section>
-          <h3>Community and Ecosystem</h3>
-          <p>
-            The {shortTokenName} community actively participates in the decentralized 
-            finance ecosystem. Token holders can engage in trading, liquidity provision, 
-            and governance activities. The project aims to build a robust and sustainable 
-            cryptocurrency ecosystem with strong community support.
-          </p>
-        </section>
-      </article>
-    </div>
+      {/* Community and ecosystem */}
+      <section className="my-6">
+        <h3 className="text-lg font-semibold mb-3">Community and Ecosystem</h3>
+        <p>
+          The {shortTokenName} community actively participates in the decentralized 
+          finance ecosystem. Token holders can engage in trading, liquidity provision, 
+          and governance activities. The project aims to build a robust and sustainable 
+          cryptocurrency ecosystem with strong community support.
+        </p>
+      </section>
+    </article>
   );
 }
 
@@ -368,7 +382,9 @@ export default async function Token({ params }: Props) {
       />
 
       {/* Client-side interactive components */}
+
       <TokenPage params={params} />
+
 
       {tokenDescription?.data?.data && (
         <>
